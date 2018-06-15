@@ -16,6 +16,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -106,6 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 Log.i("dsatatatatatta", "doInBackground: " + result.toString());
+                parseJSON(result.toString());
             }
             catch (Exception e)
             {
@@ -113,6 +118,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             return null;
         }
+
+        private void parseJSON(String s)
+        {
+            try
+            {
+                JSONObject object = new JSONObject(s);
+                JSONArray arr = object.getJSONArray("results");
+                for (int i =0 ;i <arr.length();i++)
+                {
+                    String name = ((JSONObject) arr.get(0)).getString("name");
+                    String lng = ((JSONObject) arr.get(i)).getJSONObject("geometry").getJSONObject("location").getString("lng");
+
+                    String lat = ((JSONObject) arr.get(i)).getJSONObject("geometry").getJSONObject("location").getString("lat");
+                    String icon = ((JSONObject) arr.get(i)).getString("icon");
+
+
+
+                }
+
+                //Log.i("loggggg", "parseJSON: "+ arr.length());
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+
 
         @Override
         protected void onPreExecute()
